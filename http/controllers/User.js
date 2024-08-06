@@ -167,6 +167,21 @@ function userController() {
                 console.error('Error in verifyOtp:', err);
                 res.status(500).json({success:false, message: 'Ops, something went wrong!' });
             }
+        },
+        userinfo: async (req, res) =>{
+            try {
+                const { id } = req.params;
+            
+                // Find the user by email
+                const user = await User.findOne({ id: id });
+                if (!user) {
+                  return res.status(404).json({success:false, message: 'User with this email does not exist' });
+                }
+                res.status(200).json({success:true, user });
+              } catch (err) {
+                console.error('Error in getInfo:', err);
+                res.status(500).json({success:false, message: 'Ops, something went wrong!' });
+              }
         }
     }
 }
