@@ -1,0 +1,4 @@
+**product**
+1-review
+> One customer has only one review chance one thier each product.
+> Ensure customers can only leave reviews for products they have purchased and within a certain period (e.g., 30 days after purchase).

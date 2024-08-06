@@ -27,11 +27,15 @@ router
   )
 
   .post("/login", userController().login)
-  .delete("/delete", authentication().authMiddlewear, userController().delete)
+  .delete("/usingToken", authentication().authMiddlewear, userController().delete)
   .get(
     "/alluserlist",
     authentication().authMiddlewear,
     userController().getAllUsersList
-  );
+  )
+  .post("/forgetPassword", userController().forgetPassword)
+  .post("/verifyOtp", userController().verityOtp)
+  .post("/resetPassword", userController().resetPassword)
+  .get("/userInfo/:id", authentication().authMiddlewear, userController().userinfo)
 
 module.exports = router;

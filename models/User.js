@@ -10,7 +10,9 @@ const userSchema = new mongoose.Schema({
   last_name: { type: String },
   telephone: { type: String },
   created_at: { type: Date, default: Date.now },
-  modified_at: { type: Date, default: Date.now }
+  modified_at: { type: Date, default: Date.now },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date }
 });
 
 // Middleware to hash the password before saving
