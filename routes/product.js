@@ -13,6 +13,9 @@ router.get("/:id", productController().getProductById);
 // Update a product by ID
 router.put("/:id", productController().updateProductById);
 
+//soft-delete
+router.patch('/soft-delete/:id', productController().deleteProductById);
+
 // Delete a product by ID
 router.delete("/:id", productController().deleteProductById);
 

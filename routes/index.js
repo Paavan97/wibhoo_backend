@@ -5,6 +5,7 @@ const productRouter = require('./product');
 const inventoryRouter = require('./inventory');
 const discountRouter = require('./discount');
 const skusRouter = require('./skus');
+const returnPolicyRouter = require('./returnPolicy');
 const router = express.Router();
 
 router.use('/user', userRouter);
@@ -13,6 +14,7 @@ router.use('/product', productRouter);
 router.use('/inventory', inventoryRouter);
 router.use('/discount', discountRouter);
 router.use('/skus', skusRouter);
+router.use('/returnPolicy', returnPolicyRouter);
 
 
 module.exports = router;
