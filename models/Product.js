@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema({
   id: { type: String, default: () => uuidv4(), index: true },
   name: { type: String, required: true, index: true },
   desc: { type: String },
-  SKU: { type: String, required: true, unique: true, index: true },
+  SKU: { type: String, required: true, unique: true, index: true }, //done
   category_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'ProductCategory'},
   inventory_id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'ProductInventory' },
   // quantity : { type:Number, default:0},
