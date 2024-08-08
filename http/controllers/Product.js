@@ -1,5 +1,6 @@
 const Product = require("../../models/Product");
 const ProductInventory = require("../../models/ProductInventory");
+const Review = require("../../models/Review");
 
 const ProductController = () => {
   return {
@@ -12,7 +13,7 @@ const ProductController = () => {
           category_id,
           quantity,
           price,
-          discount_ids,
+          discount_id,
           categoryDetails,
           return_policy,
           brand,
@@ -23,7 +24,7 @@ const ProductController = () => {
         } = req.body;
 
         const inventory = new ProductInventory({
-          product_id: "", // This will be updated after the product is created
+          // product_id: "", // This will be updated after the product is created
           quantity: quantity,
         });
         const savedInventory = await inventory.save();
@@ -35,7 +36,7 @@ const ProductController = () => {
           category_id,
           inventory_id: savedInventory._id,
           price,
-          discount_ids,
+          discount_id,
           categoryDetails,
           return_policy,
           brand,
@@ -61,7 +62,7 @@ const ProductController = () => {
         const products = await Product.find()
           .populate("category_id")
           .populate("inventory_id")
-          .populate("discount_ids")
+          .populate("discount_id")
           .populate("return_policy")
           .populate("reviews");
         res.status(200).json({ success: true, products: products });
@@ -77,7 +78,7 @@ const ProductController = () => {
         const product = await Product.findById(req.params.id)
           .populate("category_id")
           .populate("inventory_id")
-          .populate("discount_ids")
+          .populate("discount_id")
           .populate("return_policy")
           .populate("reviews");
         if (!product) {
@@ -100,7 +101,7 @@ const ProductController = () => {
           category_id,
           quantity,
           price,
-          discount_ids,
+          discount_id,
           categoryDetails,
           return_policy,
           brand,
@@ -109,16 +110,18 @@ const ProductController = () => {
           thumbnail,
           image
         } = req.body;
-
+        console.log("test-1");
         const product = await Product.findByIdAndUpdate(
-          req.params.id,
-          { name, desc, SKU, category_id, price, discount_ids, categoryDetails, return_policy, brand, weight, dimension, thumbnail, image },
+          {_id:req.params.id},
+          { name, desc,  category_id, price, discount_id, categoryDetails, return_policy, brand, weight, dimension, thumbnail, image },
           { new: true }
         );
+        console.log("test-2")
 
         if (!product) {
           return res.status(404).json({ success: false, message: "Product not found" });
         }
+        console.log("test-3")
 
         // Update the inventory quantity if provided
         if (quantity !== undefined) {
