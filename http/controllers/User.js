@@ -41,24 +41,18 @@ function userController() {
                 if (!errors.isEmpty()) {
                     return res.status(409).json({ status: false, message: errors.array()[0].msg, errors: errors.array() });
                 }
-
                 const { email, password } = req.body;
-
                 const user = await User.findOne({ email });
                 if (!user) {
                     return res.status(409).json({ status: false, message: "User not registered" });
                 }
-
                 // const isPasswordValid = await bcrypt.compare(password, user.password);
                 const isPasswordValid = await user.comparePassword(password)
-
-                console.log("isPaa->",password,isPasswordValid);
+                // console.log("isPaa->",password,isPasswordValid);
                 if (!isPasswordValid) {
                     return res.status(401).json({ status: false, message: "Invalid credentials" });
                 }
-
                 const token = jwt.sign({ email, userId: user._id }, process.env.AUTH_KEY, { expiresIn: '2d' });
-
                 res.status(200).cookie("authorization", token, { httpOnly: true }).json({ status: true, data: user, token });
             } catch (err) {
                 console.error("Error in login:", err);

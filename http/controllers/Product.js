@@ -60,11 +60,26 @@ const ProductController = () => {
     getAllProducts: async (req, res) => {
       try {
         const products = await Product.find()
-          .populate("category_id")
-          .populate("inventory_id")
-          .populate("discount_id")
-          .populate("return_policy")
-          .populate("reviews");
+        .populate({
+          path: 'category_id',
+          select: '_id name desc',
+        })
+        .populate({
+          path: 'inventory_id',
+          select: '-created_at -product_id -id',
+        })
+        .populate({
+          path: 'discount_id',
+          select: '', 
+        })
+        .populate({
+          path: 'return_policy',
+          select: '-deleted_at -id -created_at -modified_at -createdAt -updatedAt', 
+        })
+        .populate({
+          path: 'reviews',
+          select: '', 
+        });
         res.status(200).json({ success: true, products: products });
       } catch (error) {
         console.error("Error in getting all products:", error);
@@ -76,11 +91,26 @@ const ProductController = () => {
     getProductById: async (req, res) => {
       try {
         const product = await Product.findById(req.params.id)
-          .populate("category_id")
-          .populate("inventory_id")
-          .populate("discount_id")
-          .populate("return_policy")
-          .populate("reviews");
+        .populate({
+          path: 'category_id',
+          select: '_id name desc',
+        })
+        .populate({
+          path: 'inventory_id',
+          select: '-created_at -product_id -id',
+        })
+        .populate({
+          path: 'discount_id',
+          select: '', 
+        })
+        .populate({
+          path: 'return_policy',
+          select: '-deleted_at -id -created_at -modified_at -createdAt -updatedAt', 
+        })
+        .populate({
+          path: 'reviews',
+          select: '', 
+        });
         if (!product) {
           return res.status(404).json({ success: false, message: "Product not found" });
         }
@@ -110,18 +140,15 @@ const ProductController = () => {
           thumbnail,
           image
         } = req.body;
-        console.log("test-1");
         const product = await Product.findByIdAndUpdate(
           {_id:req.params.id},
           { name, desc,  category_id, price, discount_id, categoryDetails, return_policy, brand, weight, dimension, thumbnail, image },
           { new: true }
         );
-        console.log("test-2")
 
         if (!product) {
           return res.status(404).json({ success: false, message: "Product not found" });
         }
-        console.log("test-3")
 
         // Update the inventory quantity if provided
         if (quantity !== undefined) {
@@ -163,10 +190,8 @@ const ProductController = () => {
         if (!product) {
           return res.status(404).json({ success: false, message: "Product not found" });
         }
-
         // Also delete the associated inventory record
         await ProductInventory.findByIdAndDelete(product.inventory_id);
-
         res.status(200).json({ success: true, message: "Product hard deleted successfully" });
       } catch (error) {
         console.error("Error in hard deleting product by ID:", error);

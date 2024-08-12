@@ -9,14 +9,11 @@ router.post(
   "/",
   [
     check("name")
-      .notEmpty()
-      .withMessage("Name is required")
-      .isLength({ max: 100 })
-      .withMessage("Name cannot be longer than 100 characters"),
+      .notEmpty().withMessage("Name is required")
+      .isLength({ max: 100 }).withMessage("Name cannot be longer than 100 characters"),
     check("desc")
       .optional()
-      .isLength({ max: 500 })
-      .withMessage("Description cannot be longer than 500 characters"),
+      .isLength({ max: 250 }).withMessage("Description cannot be longer than 500 characters"),
   ],
   handleValidationErrors,
   productCategoryController().createCategory
@@ -33,13 +30,11 @@ router.put(
   "/:id",
   [
     check("name")
-    .optional()
-      .isLength({ max: 100 })
-      .withMessage("Name cannot be longer than 100 characters"),
+      .optional()
+      .isLength({ max: 100 }).withMessage("Name cannot be longer than 100 characters"),
     check("desc")
       .optional()
-      .isLength({ max: 500 })
-      .withMessage("Description cannot be longer than 500 characters"),
+      .isLength({ max: 250 }).withMessage("Description cannot be longer than 500 characters"),
   ],
   handleValidationErrors,
   productCategoryController().updateCategoryById
@@ -48,7 +43,6 @@ router.put(
 // Delete a category by ID
 router.delete("/:id", productCategoryController().deleteCategoryById);
 
-// ---------------    sku's   -------------------
 
 
 module.exports = router;
