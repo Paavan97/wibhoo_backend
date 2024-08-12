@@ -4,10 +4,10 @@ const ReturnPolicyController = () => {
   return {
     createReturnPolicy: async (req, res) => {
       try {
-        const { condition, period, description } = req.body;
-        const returnPolicy = new ReturnPolicy({ condition, period, description, deleted_at:null });
+        const { condition, period, description, policy_name } = req.body;
+        const returnPolicy = new ReturnPolicy({ condition, period, description, policy_name, deleted_at:null });
         await returnPolicy.save();
-        res.status(201).json({ success: true, returnPolicy });
+        res.status(201).json({ success: true, message:"Policy is created" });
       } catch (error) {
         console.error('Error creating return policy:', error);
         res.status(500).json({ success: false, message: 'Something went wrong!' });
@@ -15,7 +15,7 @@ const ReturnPolicyController = () => {
     },
     getAllReturnPolicies: async (req, res) => {
       try {
-        const returnPolicies = await ReturnPolicy.find({ deleted_at: { $eq: null } });
+        const returnPolicies = await ReturnPolicy.find({ deleted_at: { $eq: null } }).select({createdAt:0, updatedAt:0, modified_at:0, deleted_at:0});
         res.status(200).json({ success: true, returnPolicies });
       } catch (error) {
         console.error('Error fetching return policies:', error);
@@ -25,7 +25,7 @@ const ReturnPolicyController = () => {
     getReturnPolicyById: async (req, res) => {
       try {
         const { id } = req.params;
-        const returnPolicy = await ReturnPolicy.findOne({ _id: id, deleted_at: { $eq: null } });
+        const returnPolicy = await ReturnPolicy.findOne({ _id: id, deleted_at: { $eq: null } }).select({createdAt:0, updatedAt:0, modified_at:0, deleted_at:0});
         if (!returnPolicy) {
           return res.status(404).json({ success: false, message: 'Return policy not found' });
         }
@@ -38,16 +38,16 @@ const ReturnPolicyController = () => {
     updateReturnPolicyById: async (req, res) => {
       try {
         const { id } = req.params;
-        const { condition, period, description } = req.body;
+        const { condition, period, description, policy_name, active } = req.body;
         const returnPolicy = await ReturnPolicy.findOneAndUpdate(
           { _id: id, deleted_at: { $eq: null } },
-          { condition, period, description, modified_at: Date.now() },
+          { ...req.body, modified_at: Date.now() },
           { new: true }
         );
         if (!returnPolicy) {
           return res.status(404).json({ success: false, message: 'Return policy not found' });
         }
-        res.status(200).json({ success: true, returnPolicy });
+        res.status(200).json({ success: true, message: "return policy is updated successfully" });
       } catch (error) {
         console.error('Error updating return policy:', error);
         res.status(500).json({ success: false, message: 'Something went wrong!' });
@@ -64,7 +64,7 @@ const ReturnPolicyController = () => {
         if (!returnPolicy) {
           return res.status(404).json({ success: false, message: 'Return policy not found' });
         }
-        res.status(200).json({ success: true, returnPolicy });
+        res.status(200).json({ success: true, message: "successfully Soft deleted" });
       } catch (error) {
         console.error('Error soft deleting return policy:', error);
         res.status(500).json({ success: false, message: 'Something went wrong!' });

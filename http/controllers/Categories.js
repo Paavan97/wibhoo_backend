@@ -16,7 +16,7 @@ const ProductCategoryController = () => {
         },
         getAllCategory : async (req, res) =>{
             try {
-                const categories = await ProductCategory.find();
+                const categories = await ProductCategory.find().select({'_id':1, 'name':1, 'desc':1});
                 res.status(200).json({status:true,categories});
               } catch (err) {
                 console.error('Error getting categories:', err);
@@ -26,7 +26,7 @@ const ProductCategoryController = () => {
         getCategoryById : async (req, res) => {
             try {
                 const { id } = req.params;
-                const category = await ProductCategory.findOne({ id });
+                const category = await ProductCategory.findOne({ _id:id }).select({'_id':1, 'name':1, 'desc':1});
                 if (!category) {
                   return res.status(404).json({status:false, message: 'Category not found' });
                 }
@@ -40,11 +40,11 @@ const ProductCategoryController = () => {
             try {
                 const { id } = req.params;
                 const { name, desc } = req.body;
-                const category = await ProductCategory.findOneAndUpdate({ id }, { ...req.body, modified_at: Date.now() }, { new: true });
+                const category = await ProductCategory.findOneAndUpdate({ _id:id }, { ...req.body, modified_at: Date.now() }, { new: true });
                 if (!category) {
                   return res.status(404).json({status:false, message: 'Category not found' });
                 }
-                res.status(200).json({status:true,category});
+                res.status(200).json({status:true,messgae:"category updated successfully"});
               } catch (err) {
                 console.error('Error updating category:', err);
                 res.status(500).json({status: false, message: 'Ops, something went wrong!' });
@@ -53,7 +53,7 @@ const ProductCategoryController = () => {
         deleteCategoryById : async (req, res) => {
             try {
                 const { id } = req.params;
-                const category = await ProductCategory.findOneAndUpdate({ id }, { deleted_at: Date.now() }, { new: true });
+                const category = await ProductCategory.findOneAndUpdate({ _id : id }, { deleted_at: Date.now() }, { new: true });
                 if (!category) {
                   return res.status(404).json({status:false, message: 'Category not found' });
                 }

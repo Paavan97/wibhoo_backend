@@ -1,0 +1,6 @@
+** 8/8/2024 **
+-> after implement orders we have to update review logic [ const userHasPurchased = true; // Implement logic to check user's purchase history]
+     - to validate customer purchased product or not to give them access to make review. 
+-> cart/remove - shows error
+-> add validation in cart routes.
+-> review -> from them one of not working properly.

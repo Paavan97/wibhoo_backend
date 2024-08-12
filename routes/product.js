@@ -19,4 +19,5 @@ router.patch('/soft-delete/:id', productController().deleteProductById);
 // Delete a product by ID
 router.delete("/:id", productController().deleteProductById);
 
+
 module.exports = router;

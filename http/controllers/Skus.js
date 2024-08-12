@@ -33,7 +33,7 @@ const SKUController = () => {
     getSKUsByCategory: async (req, res) => {
       try {
         const { category_id } = req.params;
-        const skus = await SKU.find({ category_id });
+        const skus = await SKU.find({ category_id }).select({created_at:0});
         res.status(200).json({ success: true, skus });
       } catch (error) {
         console.error("Error in fetching SKUs:", error);

@@ -10,17 +10,14 @@ router.post(
   "/",
   [
     check("name")
-      .notEmpty()
-      .withMessage("Name is required")
-      .isLength({ max: 100 })
-      .withMessage("Name cannot be longer than 100 characters"),
+      .trim()
+      .notEmpty().withMessage("Name is required")
+      .isLength({ max: 50 }).withMessage("Name cannot be longer than 100 characters"),
     check("discount_percent")
-      .isFloat({ min: 0, max: 100 })
-      .withMessage("Discount percent must be between 0 and 100"),
+      .isFloat({ min: 0, max: 100 }).withMessage("Discount percent must be between 0 and 100"),
     check("active")
       .optional()
-      .isBoolean()
-      .withMessage("Active must be a boolean value"),
+      .isBoolean().withMessage("Active must be a boolean value"),
   ],
   handleValidationErrors,
   DiscountController().createDiscount

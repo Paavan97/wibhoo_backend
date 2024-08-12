@@ -6,7 +6,7 @@ const DiscountController = () => {
       try {
         const { name, desc, discount_percent, active } = req.body;
         const errorValidation = await Discount.find({ name, desc, discount_percent });
-        if(errorValidation)
+        if(errorValidation.length > 0)
         {
             return res.status(400).json({success:false, message: "This Discount is already exists!"})
         }
@@ -17,7 +17,7 @@ const DiscountController = () => {
           active,
         });
         const savedDiscount = await discount.save();
-        res.status(201).json({ success: true, data: savedDiscount });
+        res.status(201).json({ success: true, message:"Discount sucessfully created" });
       } catch (error) {
         console.error("Error in creating discount:", error);
         res
@@ -27,18 +27,17 @@ const DiscountController = () => {
     },
     getAllDiscounts: async (req, res) => {
       try {
-        const discounts = await Discount.find();
+        const discounts = await Discount.find().select({'_id':1, 'name':1, 'desc':1, 'discount_percent':1});
         res.status(201).json({ success: true, data: discounts });
       } catch (error) {
         console.error("Error in getting all discounts:", error);
-        res
-          .status(500)
-          .json({ success: false, message: "Something went wrong!" });
+        res.status(500).json({ success: false, message: "Something went wrong!" });
       }
     },
     getDiscountById: async (req, res) => {
       try {
-        const discount = await Discount.findById(req.params.id);
+        const id = req.params.id;
+        const discount = await Discount.findById(id).select({'_id':1, 'name':1, 'desc':1, 'discount_percent':1});
         if (!discount) {
           return res
             .status(404)
@@ -54,9 +53,10 @@ const DiscountController = () => {
     },
     updateDiscountById: async (req, res) => {
       try {
+        const id = req.params.id;
         const { name, desc, discount_percent, active } = req.body;
         const discount = await Discount.findByIdAndUpdate(
-          req.params.id,
+          id,
           { name, desc, discount_percent, active, modified_at: Date.now() },
           { new: true }
         );
@@ -65,7 +65,7 @@ const DiscountController = () => {
             .status(404)
             .json({ success: false, message: "Discount not found" });
         }
-        res.status(200).json({ success: true, discount });
+        res.status(200).json({ success: true, message:"Discount successfully created" });
       } catch (error) {
         console.error("Error in updating discount by ID:", error);
         res
@@ -75,7 +75,8 @@ const DiscountController = () => {
     },
     deleteDiscountById: async (req, res) => {
       try {
-        const discount = await Discount.findByIdAndDelete(req.params.id);
+        const id = req.params.id;
+        const discount = await Discount.findByIdAndDelete(id);
         if (!discount) {
           return res
             .status(404)
